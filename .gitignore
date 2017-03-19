@@ -7,6 +7,7 @@ __pycache__/
 *.so
 app.db
 # Distribution / packaging
+.idea
 .Python
 env/
 build/

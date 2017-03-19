@@ -1,0 +1,302 @@
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-4">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#log">
+                            使用 提示
+                        </a>
+                    </h4>
+                </div>
+                <div id="log" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        点击登录微信，稍微等待后 出现二维码扫描登陆，后台即开始清理僵尸粉。<br>
+                        <br>
+                        清理完成后，手动删除即可
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion"
+                               href="#Advanced">
+                                    高级 设置
+                                </a>
+                            </h4>
+                        </div>
+                    <div id="Advanced" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <table class="table">
+                                <caption><button type="button" class="btn btn-default" onclick="Wx_Feature_Settings()">Save</button></caption>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        微信登录
+                                    </td>
+                                    <td>
+                                        <div class="switch" tabindex="0">
+                                            <input type="checkbox" id="Onbot" {% if function_list['Onbot'] %}checked {% endif %}>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        消息自定义
+                                    </td>
+                                    <td>
+                                        <div class="switch" tabindex="0">
+                                            <input type="checkbox" id="Oncustom" {% if function_list['Oncustom'] %}checked {% endif %}>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        文字 + 小尾巴
+                                    </td>
+                                    <td>
+                                        <div class="switch" tabindex="0">
+                                            <input type="checkbox" id="Ontail" {% if function_list['Ontail'] %}checked {% endif %}>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        图片 + 小尾巴
+                                    </td>
+                                    <td>
+                                        <div class="switch" tabindex="0">
+                                            <input type="checkbox" id="OnSendTwoMsg" {% if function_list['OnSendTwoMsg'] %}checked {% endif %}>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#settext">
+                            小尾巴 设置
+                        </a>
+                        </h4>
+                    </div>
+                    <div id="settext" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <table class="table table-hover">
+                                <caption><button type="button" class="btn btn-default" onclick="Wx_Feature_Settings()">Save</button></caption>
+                                <tbody>
+                                <tr>
+                                    <td>
+
+                                        <input id="settext1" type="text" class="form-control" value="{{ function_list['TailTextAll'][0] }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        <input id="settext2" type="text" class="form-control" value="{{ function_list['TailTextAll'][1] }}">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+
+                                        <input id="settext3" type="text" class="form-control" value="{{ function_list['TailTextAll'][2] }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        <input id="settext4" type="text" class="form-control" value="{{ function_list['TailTextAll'][3] }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                        <input id="settext5" type="text" class="form-control" value="{{ function_list['TailTextAll'][4] }}">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion"
+                               href="#setimg">
+                                图片消息 设置
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="setimg" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <table class="table table-hover">
+                                <caption></caption>
+                                <tbody>
+                                <tr>
+                                    <form method="POST" enctype="multipart/form-data" action="/wechat/setting">
+                                        <input type="file" name="file">
+                                        <br>
+                                        <button type="submit" class="btn btn-default" >Save</button>
+                                    </form>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" disabled="true" value="{{ g.user.cover }}">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                                                    查看图片
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#basic">
+                            基本 设置
+                        </a>
+                    </h4>
+                </div>
+                <div id="basic" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <table class="table">
+                                <caption><button type="button" class="btn btn-default" onclick="Wx_Feature_Settings()">Save</button></caption>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        小尾巴 内容
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <!--<input id="TailText" type="text" class="form-control" value="{{ function_list['TailText'] }}">-->
+                                            小尾巴内容设置旁边
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        每次消息间隔
+                                    </td>
+                                    <td>
+                                       <div class="input-group">
+                                            <input id="SendInterval" type="text" class="form-control" value="{{ function_list['SendInterval'] }}">
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        发送个数休息
+                                    </td>
+                                    <td>
+                                       <div class="input-group">
+                                            <input id="SendRestnumber" type="text" class="form-control" value="{{ function_list['SendRestnumber'] }}">
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        休息时间
+                                    </td>
+                                    <td>
+                                       <div class="input-group">
+                                            <input id="SendRest" type="text" class="form-control" value="{{ function_list['SendRest'] }}">
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        频繁等待
+                                    </td>
+                                    <td>
+                                       <div class="input-group">
+                                            <input id="SendOften" type="text" class="form-control" value="{{ function_list['SendOften'] }}">
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+			</div>
+			<div class="modal-body">
+                {% if isfile %}
+				<img alt="140x140" src="{{ g.user.cover }}" />
+                {% else %}
+                图片不存在,请重新上传
+                {% endif %}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+
+<script>
+    $("div[class='switch']").each(function() {
+        $this = $(this);
+    var onColor = $this.attr("onColor");
+    var offColor = $this.attr("offColor");
+    var onText = $this.attr("onText");
+    var offText = $this.attr("offText");
+    var labelText = $this.attr("labelText");
+
+    var $switch_input = $(" :only-child", $this);
+    $switch_input.bootstrapSwitch({
+        onColor : onColor,
+        offColor : offColor,
+        onText : onText,
+        offText : offText,
+        labelText : labelText
+    });
+});
+</script>

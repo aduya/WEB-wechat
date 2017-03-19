@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% if g.user.isadmin %}
+{% set navigation_bar = [
+    ('/wechat', 'wechat_login', '登录微信'),
+    ('/wechat/setting', 'wechat_setting', '微信设置'),
+    ('/wechat/wxlogout', 'wechat_wxlogout', '退出微信')
+] -%}
+{% else %}
+{% set navigation_bar = [
+    ('/wechat', 'wechat_login', '登录微信'),
+    ('/wechat/wxlogout', 'wechat_wxlogout', '退出微信')
+] -%}
+{% endif %}
+
+
+{% block script %}
+    <script >
+        function timestamp(url){
+            //  var getTimestamp=Math.random();
+            var getTimestamp=new Date().getTime();
+            if(url.indexOf("?")>-1){
+                url=url+"×tamp="+getTimestamp
+            }else{
+                url=url+"?timestamp="+getTimestamp
+            }
+            location.href=url;
+            return url;
+        }
+        function show(url){
+            alert(url)
+        }
+                function Wx_Advanced_Settings(){
+            $.post('/wechat/setting1',{
+                text1:$('#settext1').val(),
+            }).done(function (Wx_Advanced_Settings) {
+                alert(Wx_Advanced_Settings['text'])
+            })
+        }
+        function Wx_Feature_Settings(){
+            $.post('/wechat/setting3',{
+                Onbot:$('#Onbot').bootstrapSwitch('state'),
+                Oncustom:$('#Oncustom').bootstrapSwitch('state'),
+                Ontail:$('#Ontail').bootstrapSwitch('state'),
+                OnSendTwoMsg:$('#OnSendTwoMsg').bootstrapSwitch('state'),
+                settext1:$('#settext1').val(),
+                settext2:$('#settext2').val(),
+                settext3:$('#settext3').val(),
+                settext4:$('#settext4').val(),
+                settext5:$('#settext5').val(),
+                SendInterval:$('#SendInterval').val(),
+                SendRestnumber:$('#SendRestnumber').val(),
+                SendRest:$('#SendRest').val(),
+                SendOften:$('#SendOften').val(),
+            }).done(function (Wx_Feature_Settings) {
+                window.location.reload();
+            })
+        }
+    </script>
+
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-2 column">
+                <ul class="nav nav-pills nav-stacked">
+                    {% for href, id, caption in navigation_bar %}
+                    <li{% if id == active_page %} class="active"{% endif %}>
+                    {% if id=="wechat_login"  %}
+                    {% if function_list['Onbot'] %}
+                    <a href="javascript:timestamp('{{ url_for('wechat_login')}}')">登录微信</a>
+                    {% else %}
+                    <a href="javascript:show('管理员禁止登录')">登录微信</a>
+                    {% endif %}
+                    {% else %}
+                    <a href="{{ href|e }}">{{ caption|e }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-10 column">
+                {% block wxlogin %}
+                {% if g.user.isadmin %}
+                {% include 'wxchat/adminsetting.html' %}
+                {% else %}
+                {% include 'wxchat/setting.html' %}
+                {% endif %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

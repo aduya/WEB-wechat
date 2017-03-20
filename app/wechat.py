@@ -82,3 +82,21 @@ def senduserid(ret1):
         ret = 'userid99999'
         s.sendto(ret.encode(), ('127.0.0.1', 8888))
 
+def GetWechatNum():
+    num=0
+    pids=psutil.pids()
+    for n in pids:
+        try:
+            p = psutil.Process(n)
+            if p.name()=='python.exe':
+                num+=1
+        except:
+            pass
+    return num
+
+
+def DeleteCache(ImgPath):
+    try:
+        os.remove(ImgPath)
+    except:
+        pass

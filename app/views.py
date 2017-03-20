@@ -1,17 +1,24 @@
 from flask import render_template, flash, redirect,g,url_for,session,request,jsonify
-
-from flask_login import login_user, logout_user, current_user, login_required,AnonymousUserMixin
+from flask_login import login_user, logout_user, current_user, login_required
 from app import app,lm,db
 from .models import User,Wxbot
 from .forms import LoginForm,RegistrationForm
-from .wechat import wx_is_login_state,wx_logout,wx_login_bat,allowed_file
+from .wechat import wx_is_login_state,wx_logout,wx_login_bat,allowed_file,GetWechatNum,DeleteCache
 import os
 import hashlib
 import time
 
+Ipfrequency={} #ip频率检测
+
 @app.before_request
 def before_request():
     g.user = current_user
+    try:
+        if 'MicroMessenger' in request.headers['User-Agent']:
+            return render_template('error.html')
+    except:
+        return render_template('error.html')
+
 
 
 @app.route('/')
@@ -51,7 +58,6 @@ def login():
             session['remember_me'] = form.remember_me.data
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('index'))
-
         flash('Invalid username or password.')
     return render_template('login.html',
                            title='Sign In',
@@ -84,6 +90,26 @@ def wechat():
 
 @app.route('/wechat/login/', methods=['GET', 'POST'])
 def wechat_login():
+    if GetWechatNum()>30:
+        flash('服务器达到最大负载，请稍后重试')
+        return redirect(url_for('index'))
+    #频率检测
+    try:
+        ip=request.remote_addr
+    except:
+        flash('非法调用')
+        return redirect(url_for('index'))
+    try:
+        if int(time.time())-Ipfrequency[ip][1]>60:
+            Ipfrequency[ip] = [1, int(time.time())]
+        else:
+            Ipfrequency[ip][0]=Ipfrequency[ip][0]+1
+            if Ipfrequency[ip][0]>=3:
+                flash('调用次数过多，请1分钟后重试')
+                return redirect(url_for('index'))
+    except:
+        Ipfrequency[ip]=[1,int(time.time())]
+    ####
     try:
         if 'wechat' in request.headers['Referer']:
             flash('请勿重复获取')
@@ -96,6 +122,7 @@ def wechat_login():
     if not setting['Onbot']:
         flash('管理员禁止登录')
         return redirect(url_for('index'))
+
     if g.user.is_authenticated:
         if g.user.sendtext==None and g.user.imgpath==None and setting['Oncustom']:
             flash('请先设置发送内容')
@@ -105,7 +132,7 @@ def wechat_login():
             wx_logout()
             WX_PID = wx_login_bat(temp)
             if WX_PID:
-                flash('请在120秒内扫码登录，过期失效')
+                flash('请在60秒内扫码登录，过期失效')
                 return render_template('wxchat/wxlogin.html',
                                        img_path='%s.jpg' % temp,
                                        is_wxchat=ret,
@@ -131,6 +158,9 @@ def wechat_login():
                                function_list=setting)
     flash('获取二维码失败，请重新获取')
     return redirect(url_for('index'))
+
+
+
 
 @app.route('/wechat/setting', methods = ['POST','GET'])
 def wechat_setting():

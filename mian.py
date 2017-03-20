@@ -25,7 +25,7 @@ def get_uin(msg):
     global JSF,IsSendMsgNow
     if '朋友验证请求' in msg['Text'] or '对方拒收' in msg['Text']:
         JSF=JSF+1
-        itchat.set_alias(msg['FromUserName'],'僵尸粉-%s'%msg['CreateTime'])
+        itchat.set_alias(msg['FromUserName'],'A00000【僵尸粉】%s'%JSF)
     if '过于频繁' in msg['Text']:
         IsSendMsgNow=False
 
@@ -69,7 +69,7 @@ def UDP():
             print(e)
     while True:
         endtime = datetime.datetime.now()
-        if (endtime - starttime).seconds > 120:
+        if (endtime - starttime).seconds > 60:
             print('超过110秒')
             wx_logout()
         if islogin:
@@ -85,6 +85,7 @@ def Sendmsg(text):
     sendnum=0
     allnum=0
     friend=itchat.get_friends(True)
+    Newtext=text
     for n in friend:
         sendnum =sendnum+1
         allnum=allnum+1
@@ -97,9 +98,9 @@ def Sendmsg(text):
         #============================
         #组合小尾巴消息
         if SETTING['Ontail'] and not '@img@' in text or text==' ':
-            text='%s\r\n%s'%(text,SETTING['TailTextAll'][random.randint(0,4)])
+            Newtext='%s\r\n%s'%(text,SETTING['TailTextAll'][random.randint(0,4)])
         #==============
-        itchat.send(text,n['UserName'])
+        itchat.send(Newtext,n['UserName'])
         print(n['UserName'])
         try:
             #如果设置的图片消息，是否接着发送小尾巴消息
